@@ -1,7 +1,7 @@
 # migration_to_new_services.py
 # This file documents the migration plan, env changes and basic testing steps.
 
-migration_text = '''
+migration_text = r'''
 =================================================================
 Migration Plan to OpenAI and ElevenLabs Services
 =================================================================
