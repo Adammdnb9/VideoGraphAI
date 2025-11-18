@@ -41,3 +41,5 @@ wandb==0.18.5
 x_transformers==1.40.2
 zhconv==1.4.3
 zhon==2.0.2
+openai
+serpapi

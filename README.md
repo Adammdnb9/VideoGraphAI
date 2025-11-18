@@ -57,11 +57,17 @@ VideoGraphAI streamlines the creation of YouTube Shorts using advanced AI techno
 - Python 3.8+
 - FFmpeg
 - Docker (optional, recommended for Gentle server)
-- API Keys:
+- API Keys (legacy):
   - Groq API
   - Together AI API
   - Tavily Search API
   - F5-TTS (local installation)
+- API Keys (new services - recommended):
+  - OpenAI API (`OPENAI_API_KEY`)
+  - ElevenLabs API (`ELEVENLABS_API_KEY` and `ELEVENLABS_VOICE_ID`)
+  - SerpAPI (optional, `SERPAPI_API_KEY`)
+
+> **🔄 Migration Note:** New service wrapper modules have been added for OpenAI and ElevenLabs to provide more reliable LLM, image generation, and TTS capabilities. See `migration_to_new_services.py` for migration guidance. The legacy provider integrations will continue to work.
 
 ## 🚀 Installation
 
@@ -127,13 +133,26 @@ docker run -d -p 8765:8765 lowerquality/gentle
 
 ## ⚙️ Configuration
 
-Create a `.env` file:
+Create a `.env` file (or copy from `.env.example`):
+
+### Legacy Configuration (currently in use)
 ```env
 GROQ_API_KEY=your_groq_api_key
 BFL_API_KEY=your_black_forest_labs_api_key
 TOGETHER_API_KEY=your_together_api_key
 TAVILY_API_KEY=your_tavily_api_key
+TIKTOK_SESSION_ID=your_tiktok_session_id
 ```
+
+### New Services Configuration (recommended for future use)
+```env
+OPENAI_API_KEY=sk-...
+ELEVENLABS_API_KEY=elevenlabs-...
+ELEVENLABS_VOICE_ID=your-voice-id
+SERPAPI_API_KEY=serpapi-...
+```
+
+**Migration Guide:** See `migration_to_new_services.py` for detailed instructions on migrating to the new service modules.
 
 ## 📝 Usage
 
