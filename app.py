@@ -1608,6 +1608,61 @@ async def youtube_shorts_workflow(topic: str, time_frame: str, video_length: int
         results["Output Video Path"] = None
 
     return results
+# -------- Simple REPL helper functions --------
+
+def generate_script(topic: str, time_frame: str, video_length: int, user_script: str | None = None) -> str:
+    """
+    High-level helper: returns just the generated script text.
+    If user_script is provided, it is returned as-is.
+    """
+    async def _run():
+        if user_script and user_script.strip():
+            return user_script.strip()
+
+        research_agent = RecentEventsResearchAgent()
+        script_agent = VideoScriptGenerationAgent()
+
+        research = await research_agent.execute({
+            "topic": topic,
+            "time_frame": time_frame,
+            "video_length": video_length,
+        })
+
+        script = await script_agent.execute({
+            "research": research,
+            "video_length": video_length,
+        })
+        return script
+
+    return asyncio.run(_run())
+
+
+def generate_storyboard_images(script_text: str):
+    """
+    High-level helper: given a script string, returns the list of storyboard scenes.
+    Each scene is a dict with keys like 'number', 'visual', 'narration_text',
+    'video_keyword', 'image_keyword', etc.
+    """
+    async def _run():
+        storyboard_agent = StoryboardGenerationAgent()
+        scenes = await storyboard_agent.execute({"script": script_text})
+        return scenes
+
+    return asyncio.run(_run())
+
+
+def tts_generate_wav(script_text: str, output_file: str):
+    """
+    High-level helper: generates TTS audio for the script and saves it to output_file.
+    Uses the same scene/narration pipeline as your main app.
+    """
+    # 1) Get scenes from the script
+    scenes = generate_storyboard_images(script_text)
+
+    # 2) Generate voiceover audio for all scenes and save as a single file
+    ok = generate_voiceover(scenes, output_file)
+    if not ok:
+        raise RuntimeError("Voiceover generation failed")
 
 if __name__ == "__main__":
     main()
